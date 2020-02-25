@@ -19,16 +19,18 @@
         function generateNums()
         {
             var randNums = new Array();
-            randNums.push(getRand(1, 18));
-            for(i = 1; i < 6; i++){
+            var lucky = getRand(1, 18);
+            for(i = 0; i < 5; i++){
                 randNums.push(getRand(1, 48));
             }
             document.getElementById("unsorted").innerHTML = randNums.toString();
             randNums.sort(function(a,b){return a - b});
             document.getElementById("sorted").innerHTML = randNums.toString();
+            document.getElementById("lucky").innerHTML = lucky.toString();
         }
     </script>
     <h1>Lucky for Life</h1>
-    <div id="unsorted"></div>
-    <div id="sorted"></div>
+    <div>Unsorted: <span id="unsorted"></span></div>
+    <div>Sorted: <span id="sorted"></span></div>
+    <div>Lucky numer: <span id="lucky"></span></div>
 </body>
