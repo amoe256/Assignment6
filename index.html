@@ -1,1 +1,34 @@
-hello
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    <meta charset="UTF-8">
+    <meta name="Author" content="Andreas Moe">
+    <meta name="Date" content="2/24/2020">
+    <meta name=Assignment content="Comp20-6">
+    <meta name="Description" content="Mass Lottery">
+    <title>
+        Lucky for Life
+    </title>
+</head>
+<body onload="generateNums()">
+    <script language="JavaScript">
+        function getRand(max, min)
+        {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+        function generateNums()
+        {
+            var randNums = new Array();
+            randNums.push(getRand(1, 18));
+            for(i = 1; i < 6; i++){
+                randNums.push(getRand(1, 48));
+            }
+            document.getElementById("unsorted").innerHTML = randNums.toString();
+            randNums.sort(function(a,b){return a - b});
+            document.getElementById("sorted").innerHTML = randNums.toString();
+        }
+    </script>
+    <h1>Lucky for Life</h1>
+    <div id="unsorted"></div>
+    <div id="sorted"></div>
+</body>
