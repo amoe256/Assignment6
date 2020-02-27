@@ -12,25 +12,104 @@
 </head>
 <body onload="generateNums()">
     <script language="JavaScript">
+        // GLOBAL VARIABLES
+        var randNumsUsed = new Array(); // Array for checking duplicates
+        var correctNums = new Array();  // Array for 5 random nums
+        var correctLucky;               // Lucky num
         function getRand(max, min)
         {
-            return Math.floor(Math.random() * (max - min + 1) + min);
+            var n = Math.floor(Math.random() * (max - min + 1) + min);
+            return n;
+        }
+        function isDuplicate(n)
+        {
+            dupe = false;
+            for (i = 0; i < randNumsUsed.length; i++) {
+                if (n == randNumsUsed[i]) {
+                    dupe = true;
+                }
+            }
+            return dupe;
         }
         function generateNums()
         {
-            var randNums = new Array();
-            var lucky = getRand(1, 18);
+            correctLucky = getRand(1, 18);
             for(i = 0; i < 5; i++){
-                randNums.push(getRand(1, 48));
+                n = getRand(1, 48);
+                while (isDuplicate(n)) { // Loop to get a unique random number
+                    n = getRand(1, 48);
+                }
+                correctNums.push(n);
+                randNumsUsed.push(n);
             }
-            document.getElementById("unsorted").innerHTML = randNums.toString();
-            randNums.sort(function(a,b){return a - b});
-            document.getElementById("sorted").innerHTML = randNums.toString();
-            document.getElementById("lucky").innerHTML = lucky.toString();
+
+            // Output to page
+            document.getElementById("unsorted").innerHTML = 
+                correctNums.toString();
+            correctNums.sort(function(a,b){return a - b});
+            document.getElementById("sorted").innerHTML = 
+                correctNums.toString();
+            document.getElementById("lucky").innerHTML = 
+                correctLucky.toString();
         }
     </script>
+
     <h1>Lucky for Life</h1>
+
     <div>Unsorted: <span id="unsorted"></span></div>
     <div>Sorted: <span id="sorted"></span></div>
-    <div>Lucky numer: <span id="lucky"></span></div>
+    <div>Lucky number: <span id="lucky"></span></div>
+
+    <form id="userGuess">
+        Enter a guess for the 5 numbers (1-48): 
+            <input type="text" id="numsGuess" value="1 1 1 1 1"><br />
+        Enter a guess for the lucky number (1-18):
+            <input type="text" id="luckyGuess" value="1"><br />
+        <input type="button" onclick="parseGuess()" value="Submit">
+    </form>
+
+    <div id="prize"></div>
+
+    <script language="JavaScript">
+        function parseGuess()
+        {
+            var numsGuess = document.getElementById("numsGuess").value;
+            var luckyGuess = document.getElementById("luckyGuess").value;
+
+            // parse guesses into arrays
+            numsGuess = numsGuess.split(" ");
+            numsGuess.sort(function(a,b){return a - b});
+            luckyGuess = luckyGuess.split(" ");
+            calcPrize(numsGuess, luckyGuess);
+        }
+        function calcPrize(numsGuess, luckyGuess)
+        {
+            // array representing different prize amounts
+            var prizeArr = ["$0", "$4", "$0", "$6", "$3", "$25", "$20", "$150",
+                            "$200", "$5,000", "$25,000 a YEAR for LIFE!",
+                            "$7,000 a WEEK for LIFE!"];
+            // number of correct guesses for 5 nums and lucky
+            var numsCorrect = 0;
+            var luckyCorrect = 0;
+    
+            // loop to find number of correct guesses for 5 nums
+            for (i = 0; i < 5; i++) {
+                for (j = 0; j < 5; j++) {
+                    if (numsGuess[i] == correctNums[j]) {
+                        numsCorrect++;
+                        break;
+                    }
+                }
+            }
+            
+            // check if guess for lucky num was correct
+            if (luckyGuess[0] == correctLucky){
+                luckyCorrect = 1;
+            }
+
+            // print correct prize
+            document.getElementById("prize").innerHTML = "You won " + 
+                prizeArr[numsCorrect * 2 + luckyCorrect];
+        }
+    </script>
 </body>
